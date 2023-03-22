@@ -33,10 +33,6 @@ class MyAccountManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
-
-
-        
-
 class Account(AbstractBaseUser):
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
@@ -74,5 +70,27 @@ class Account(AbstractBaseUser):
     #Returns True if the user has any permissions in the given package (the Django app label). If the user is inactive, this method will always return False. For an active superuser, this method will always return True.
     def has_module_perms(self,add_label):
         return True
+    
+class UserProfile(models.Model):
+    user = models.OneToOneField(Account, on_delete=models.CASCADE)
+    address_line_1 = models.CharField(blank=True, max_length=100)
+    address_line_2 = models.CharField(blank=True, max_length=100)
+    profile_picture = models.ImageField(blank=True, upload_to='userprofile')
+    city = models.CharField(blank=True, max_length=20)
+    state = models.CharField(blank=True, max_length=20)
+    country = models.CharField(blank=True, max_length=20)
+
+    
+    def __str__(self):
+        return self.user.first_name
+    
+    def full_address(self):
+        return f'{self.address_line_1} {self.address_line_2}'
+    
+
+    
+
+
+
 
     
